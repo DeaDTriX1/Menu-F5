@@ -2,11 +2,11 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-ESX.RegisterServerCallback('menu-f5:server:getGroup', function(source, cb)
-	local _src = source
-	local xPlayer = ESX.GetPlayerFromId(_src)
-	local plyGroup = xPlayer.getGroup()
-	cb(plyGroup)
+ESX.RegisterServerCallback('2-AdminMenu:getUsergroup', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local group = xPlayer.getGroup()
+	print(GetPlayerName(source).." - "..group)
+    cb(group)
 end)
 
 ESX.RegisterServerCallback('zf5:getweapon', function(source, cb)
