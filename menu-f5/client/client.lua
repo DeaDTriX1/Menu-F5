@@ -197,7 +197,7 @@ function MenuF5()
 
         RageUI.Visible(main, not RageUI.Visible(main))
         ESX.TriggerServerCallback('zf5:getweapon', function(weapons)
-            GetGroup()
+            ESX.TriggerServerCallback("2-AdminMenu:getUsergroup",function(group)
         while main do
             Citizen.Wait(0)
 
@@ -999,43 +999,10 @@ function MenuF5()
         end
     end
 end)
+end)
 end
 
 
 Keys.Register('F5', 'Menu-F5', 'Ouvrir le menu F5', function()
     MenuF5()
 end)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
