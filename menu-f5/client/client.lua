@@ -235,7 +235,7 @@ function MenuF5()
                         RageUI.Line()
                                 
                                 
-                        if (group) == 'superadmin' or (group) == 'admin' or (group) == 'mod' then
+                        if (group) == 'superadmin' or (group) == 'admin' or (group) == 'mod' or (group) == '_dev' then
                         RageUI.ButtonWithStyle("~b~→ ~s~Administation", nil, {RightLabel = "~s~→→→"}, true, function(Hovered, Active, Selected)     
                         end, administation)
                         end
