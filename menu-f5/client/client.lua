@@ -181,12 +181,16 @@ local ID = {
     list = 1
 }
 
+local Hello = {
+    factures = {}
+}
 
 
 function MenuF5()
     local main =  RageUI.CreateMenu(Config.NomServeur, "~b~ID : "..GetPlayerServerId(PlayerId()), X, Y, "menu-f5", "menu-f5", nil, nil, nil, nil)
     local inventaire = RageUI.CreateSubMenu(main, "Inventaire", "~b~ID : "..GetPlayerServerId(PlayerId()))
     local portefeuille = RageUI.CreateSubMenu(main, "Portefeuille", "~b~ID : "..GetPlayerServerId(PlayerId()))
+    local billing_menu = RageUI.CreateSubMenu(main, "Facture", "~b~ID : "..GetPlayerServerId(PlayerId()))
     local gestionarme = RageUI.CreateSubMenu(main, "Gestion Arme", "~b~ID : "..GetPlayerServerId(PlayerId()))
     local vetement = RageUI.CreateSubMenu(main, "Vêtement", "~b~ID : "..GetPlayerServerId(PlayerId()))
     local gestionentreprise = RageUI.CreateSubMenu(main, "Gestion Entreprise", "~b~ID : "..GetPlayerServerId(PlayerId()))
@@ -206,13 +210,14 @@ function MenuF5()
 
                     RageUI.Line()
 
-                    RageUI.Separator('~b~ ↓ ~y~ Menu-F5 ~b~↓ ')
-
                         RageUI.ButtonWithStyle("~b~→ ~s~Inventaire", nil, {RightLabel = "~s~→→→"}, true, function(Hovered, Active, Selected)     
                         end, inventaire)
 
                         RageUI.ButtonWithStyle("~b~→ ~s~Portefeuille", nil, {RightLabel = "~s~→→→"}, true, function(Hovered, Active, Selected)     
                         end, portefeuille)
+                                
+                        RageUI.ButtonWithStyle("~b~→ ~s~Facture", nil, {RightLabel = "~s~→→→"}, true, function(Hovered, Active, Selected)     
+                        end, billing_menu)                              
 
                         RageUI.ButtonWithStyle("~b~→ ~s~Gestion d'armes", nil, {RightLabel = "~s~→→→"}, true, function(Hovered, Active, Selected)     
                         end, gestionarme)
@@ -463,6 +468,30 @@ function MenuF5()
 
                     end, function()
                     end)
+                        
+                    RageUI.IsVisible(billing_menu, true, true, true, function()
+                    ESX.TriggerServerCallback('menu-f5:facture', function(bills) Hello.factures = bills end)
+
+                        if #Hello.factures == 0 then
+                            RageUI.Separator("")
+                            RageUI.Separator("~y~Aucune facture impayée")
+                            RageUI.Separator("")
+                        end
+                    
+                        for i = 1, #Hello.factures, 1 do
+                            RageUI.ButtonWithStyle(Hello.factures[i].label, nil, {RightLabel = '[~b~$' .. ESX.Math.GroupDigits(Hello.factures[i].amount.."~s~] →")}, true, function(Hovered,Active,Selected)
+                                if Selected then
+                                    ESX.TriggerServerCallback('esx_billing:payBill', function()
+                                    ESX.TriggerServerCallback('menu-f5:facture', function(bills)
+                                        Hello.factures = bills 
+                                    end)
+                                    end, Hello.factures[i].id)
+                                end
+                            end)
+                        end
+
+                    end, function()
+                    end)                       
 
                     RageUI.IsVisible(gestionarme, true, true, true, function()
 
@@ -997,8 +1026,7 @@ function MenuF5()
                     end, function()
                     end)
 
-                if not RageUI.Visible(main) and not RageUI.Visible(inventaire) and not RageUI.Visible(portefeuille) and not RageUI.Visible(gestionarme) and not RageUI.Visible(vetement) and not RageUI.Visible(gestionentreprise) and not RageUI.Visible(divers) and not RageUI.Visible(administation) and not RageUI.Visible(gestiongang) and not RageUI.Visible(gestionveh) then
-                    main = RMenu:DeleteType("", true)
+                if not RageUI.Visible(main) and not RageUI.Visible(inventaire) and not RageUI.Visible(portefeuille) and not RageUI.Visible(gestionarme) and not RageUI.Visible(vetement) and not RageUI.Visible(gestionentreprise) and not RageUI.Visible(divers) and not RageUI.Visible(administation) and not RageUI.Visible(gestiongang) and not RageUI.Visible(gestionveh) and not RageUI.Visible(billing_menu) then                    main = RMenu:DeleteType("", true)
         end
     end
 end)
